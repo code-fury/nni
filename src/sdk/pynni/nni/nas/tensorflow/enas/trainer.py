@@ -8,15 +8,13 @@ from tensorflow.keras.optimizers import Adam
 
 from nni.nas.tensorflow.utils import AverageMeterGroup, fill_zero_grads
 
-from .mutator import EnasMutator
-
 logger = logging.getLogger(__name__)
 
 
 class EnasTrainer:
     def __init__(
         self,
-        model,
+        mutator,
         loss,
         metrics,
         reward_function,
@@ -36,7 +34,8 @@ class EnasTrainer:
         aux_weight=0.4,
         test_arc_per_epoch=1,
     ):
-        self.model = model
+        self.mutator = mutator
+        self.model = self.mutator.model
         self.loss = loss
         self.metrics = metrics
         self.reward_function = reward_function
@@ -61,7 +60,6 @@ class EnasTrainer:
         self.aux_weight = aux_weight
         self.test_arc_per_epoch = test_arc_per_epoch
 
-        self.mutator = EnasMutator(model)
         self.mutator_optim = Adam(learning_rate=self.mutator_lr)
 
         self.baseline = 0.0

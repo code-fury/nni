@@ -47,9 +47,9 @@ class Mutator(BaseMutator):
 
     def _select_with_mask(self, map_fn, candidates, mask):
         if mask.dtype.is_bool:
-            out = [map_fn(cand) for cand, m in zip(candidates, mask) if m]
+            out = [map_fn(cand) for cand, m in zip(candidates, mask.numpy()) if m]
         elif mask.dtype.is_floating:
-            out = [map_fn(cand) * m for cand, m in zip(candidates, mask) if m]
+            out = [map_fn(cand) * m for cand, m in zip(candidates, mask.numpy()) if m]
         else:
             raise ValueError('Unrecognized mask, dtype is {}'.format(mask.dtype.name))
         return out
